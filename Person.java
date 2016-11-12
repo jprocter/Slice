@@ -1,16 +1,19 @@
+import java.util.Map;
+import java.util.HashMap;
+import java.util.*;
+
 public class Person {
     private int numSlices;
-    private int[] prefs;
-    private Map<int, int> slicePref = new Map<>();
+    private Map<String, Integer> prefs = new HashMap<>();
+    private Map<String, Integer> slicePrefs = new HashMap<>();
+    private Map<String, Integer> pizza = new HashMap<>();
 
-    public Person(int n, int[] p, int[] perSlicePref) {
+    public Person(int n, Set<String> keySet) {
         numSlices = n;
-        prefs = new int[p.length];
-        for (int i = 0; i < p.length; i++) {
-            prefs[i] = p[i];
-        }
-        for (i = 0; i < perSlicePref.length; i++) {
-            slicePref.put(i, perSlicePref[i]);
+        for (String s : keySet) {
+            prefs.put(s, 0);
+            slicePrefs.put(s, 0);
+            pizza.put(s, 0);
         }
     }
 
@@ -18,11 +21,15 @@ public class Person {
         return numSlices;
     }
 
-    public int getSlicePref(int key) {
-        return slicePref.get(key);
+    public int getSlicePref(String key) {
+        return slicePrefs.get(key);
     }
 
-    public void decSlicePref(int key) {
-        slicePref.put(key, slicePref.get(key) - 1);
+    public void decSlicePref(String key) {
+        slicePrefs.put(key, slicePrefs.get(key) - 1);
+    }
+
+    public int getPref(String key) {
+        return prefs.get(key);
     }
 }
