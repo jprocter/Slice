@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.*;
 
 public class Slice {
@@ -30,7 +26,7 @@ public class Slice {
         sum = (int) Math.ceil(((double) sum) / numSlices) * 8;
         while (cont) {
             System.out.println("Enter next type of pizza: ");
-            s = keyboard.nextLine();
+            s = keyboard.next();
             keyboard.nextLine();
             System.out.println("How many slices of that type?");
             i = keyboard.nextInt();
@@ -44,6 +40,30 @@ public class Slice {
         for (String h : types.getKeySet()) {
             System.out.println(types.getValue(h) + " slices of " + h);
         }
-        System.out.println(types.getValue("BBQ"));
+        System.out.println();
+
+        ArrayList<Person> people = new ArrayList<Person>();
+        Person p;
+        int sl;
+        for (i = 0; i < numPeeps; i++) {
+            p = new Person(peepsNoSlices[i], types.getKeySet());
+            System.out.println("Person " + (i+1) + ":");
+            for (String l : types.getKeySet()) {
+                System.out.println("How many slices of " + l + " do you want?");
+                sl = keyboard.nextInt();
+                p.addPref(l, sl);
+            }
+            for (String l : types.getKeySet()) {
+                System.out.println("From 1 being the highest, to " + (types.getKeySet().toArray().length)
+                    + " being the lowest, how much do you want " + l + "?");
+                sl = keyboard.nextInt();
+                p.addSlicePref(l, sl);
+            }
+            people.add(p);
+        }
+        System.out.println();
+        for (Person ph : people) {
+            System.out.println(ph);
+        }
     }
 }

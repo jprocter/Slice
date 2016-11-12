@@ -5,7 +5,7 @@ public class Types {
 
     public Types() {}
 
-    public void addType(String str, int a) {
+    public void addType(String str, Integer a) {
         types.put(str, a);
     }
 

@@ -32,4 +32,29 @@ public class Person {
     public int getPref(String key) {
         return prefs.get(key);
     }
+
+    public void addPref(String key, Integer a) {
+        prefs.put(key, a);
+    }
+
+    public void addSlicePref(String key, Integer a) {
+        slicePrefs.put(key, a);
+    }
+
+    public void addPizza(String key, Integer a) {
+        pizza.put(key, a);
+    }
+
+    public String toString() {
+        String s = "This person wants " + numSlices + " slices of pizza.\n";
+        for (String l : prefs.keySet()) {
+            s = s + prefs.get(l) + " " + l + "\n";
+        }
+        for (String l : slicePrefs.keySet()) {
+            s = s + l + " is their priority " + slicePrefs.get(l) + "\n";
+        }
+        return s;
+    }
+
+
 }
