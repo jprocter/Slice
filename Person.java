@@ -56,5 +56,9 @@ public class Person {
         return s;
     }
 
+    public boolean doesContainSlicePref(Integer value) {
+        return slicePrefs.containsValue(value);
+    }
+
 
 }

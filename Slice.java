@@ -21,18 +21,32 @@ public class Slice {
         }
         System.out.println("Total number of slices: " + sum + ". Recommended number of pizzas: " + (int) Math.ceil(((double) sum) / numSlices));
         boolean cont = true;
+        boolean cont2;
         String s;
         Types types = new Types();
-        sum = (int) Math.ceil(((double) sum) / numSlices) * 8;
+        System.out.println("Enter a number of pizzas:");
+        sum = keyboard.nextInt() * 8;
+        System.out.println();
         while (cont) {
-            System.out.println("Enter next type of pizza: ");
+            System.out.println("Enter next type of pizza(" + sum + " slices remaining):");
             s = keyboard.next();
             keyboard.nextLine();
-            System.out.println("How many slices of that type?");
-            i = keyboard.nextInt();
+            cont2 = true;
+            while(cont2) {
+                System.out.println("How many slices of that type?");
+                i = keyboard.nextInt();
+                if (sum - i < 0) {
+                    System.out.println("Error: Not enough slices left for amount entered. " + sum + " remaining.");
+                }
+                else if (i == 0) {
+                    System.out.println("Error: Can't be zero slices.");
+                } else {
+                    cont2 = false;
+                }
+            }
             types.addType(s, i);
             sum = sum - i;
-            if (sum <= 0) {
+            if (sum == 0) {
                 cont = false;
             }
         }
@@ -44,19 +58,46 @@ public class Slice {
 
         ArrayList<Person> people = new ArrayList<Person>();
         Person p;
-        int sl;
+        int sl = 0;
         for (i = 0; i < numPeeps; i++) {
             p = new Person(peepsNoSlices[i], types.getKeySet());
-            System.out.println("Person " + (i+1) + ":");
-            for (String l : types.getKeySet()) {
-                System.out.println("How many slices of " + l + " do you want?");
-                sl = keyboard.nextInt();
-                p.addPref(l, sl);
+            System.out.println("\nPerson " + (i+1) + ":");
+            cont = true;
+            while(cont) {
+                sum = peepsNoSlices[i];
+                for (String l : types.getKeySet()) {
+                    cont2 = true;
+                    while(cont2) {
+                        System.out.println("How many slices of " + l + " do you want(" + sum + " slices left to select)?");
+                        sl = keyboard.nextInt();
+                        if (sum - sl < 0) {
+                            System.out.println("Error: Not enough slices left.");
+                        } else {
+                            cont2 = false;
+                        }
+                    }
+                    sum = sum - sl;
+                    p.addPref(l, sl);
+                }
+                if (sum == 0) {
+                    cont = false;
+                } else {
+                    System.out.println("Error: You're selection must match your number of slices chosen. Start Over\n");
+                }
             }
+
             for (String l : types.getKeySet()) {
-                System.out.println("From 1 being the highest, to " + (types.getKeySet().toArray().length)
+                cont = true;
+                while(cont) {
+                    System.out.println("From 1 being the highest, to " + (types.getKeySet().toArray().length)
                     + " being the lowest, how much do you want " + l + "?");
-                sl = keyboard.nextInt();
+                    sl = keyboard.nextInt();
+                    if (!p.doesContainSlicePref(sl)) {
+                        cont = false;
+                    } else {
+                        System.out.println("You have already entered that priority, enter something else.");
+                    }
+                }
                 p.addSlicePref(l, sl);
             }
             people.add(p);
