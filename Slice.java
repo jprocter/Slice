@@ -4,6 +4,7 @@ public class Slice {
     ArrayList<Person> people = new ArrayList<Person>();
 
     public static void main(String args[]) {
+        Random rand = new Random();
         Scanner keyboard = new Scanner(System.in);
         System.out.println("How many slices are on a pizza?");
         int numSlices = keyboard.nextInt();
@@ -98,13 +99,113 @@ public class Slice {
                         System.out.println("You have already entered that priority, enter something else.");
                     }
                 }
-                p.addSlicePref(l, sl);
+                p.addSlicePref(sl, l);
             }
             people.add(p);
         }
         System.out.println();
         for (Person ph : people) {
             System.out.println(ph);
+        }
+
+
+
+        /* SLICE ALGORITHM
+        /
+        /  Made by Roy and Raines.
+        /
+        /
+        */
+
+        //Compute the maximum of pizza slices wanted by any individual.
+        Arrays.sort(peepsNoSlices);
+        int max = peepsNoSlices[peepsNoSlices.length - 1];
+
+        int k, leftForType, val, u;
+        //That's how many rounds there will be
+        for (i = 1; i <= max; i++) {
+            for (String j : types.getKeySet()) { //for however many types of pizza there are
+                leftForType = types.getValue(j);
+
+                //sort people by prefs numbers of this type in descending order
+                Collections.sort(people, (Person a, Person b) -> {
+                    if (a.getPref(j) > b.getPref(j)) {
+                        return -1;
+                    } else if (a.getPref(j) < b.getPref(j)) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+
+                cont = true;
+                k = 0;
+                while(cont) { //for however many people there are
+                    if (k >= people.size()) {
+                        break;
+                    }
+                    val = people.get(k).getPref(j);
+                    if (val > 0 && leftForType - val >= 0) {
+                        people.get(k).putOnDoorstep(j, true);
+                        leftForType = leftForType - val;
+                    } else if (val > 0) {
+                        people.get(k).putOnDoorstep(j, true);
+                        leftForType = 0;
+                    } else {
+
+                    }
+                    if (leftForType <= 0 || k >= people.size()) {
+                        cont = false;
+                    }
+                    k++;
+                }
+                if (leftForType != 0) { //if not all of this type are assigned to doorsteps
+                    cont = true;
+                    k = people.size() - 1;
+                    while(cont) {
+                        if (k < 0) {
+                            break;
+                        }
+                        people.get(k).putOnDoorstep(j, true);
+                        leftForType = leftForType - 1;
+                        if (leftForType <= 0 || k < 0) {
+                            cont = false;
+                        }
+                        k--;
+                    }
+                }
+            }
+
+            int d;
+            for (u = 0; u < people.size(); u++) {
+                if (people.get(u).getNumSlices() > 0) {
+                    cont = true;
+                    d = 1;
+                    while(cont) {
+                        if (d > types.getKeySet().toArray().length) {
+                            cont = false;
+                        } else if (people.get(u).isOnDoorstep(people.get(u).getSlicePref(d))) {
+                            people.get(u).addPizza(people.get(u).getSlicePref(d), 1 + people.get(u).getPizza(people.get(u).getSlicePref(d)));
+                            types.addType(people.get(u).getSlicePref(d), types.getValue(people.get(u).getSlicePref(d)) - 1);
+                            cont = false;
+                            people.get(u).decPref(people.get(u).getSlicePref(d));
+                        }
+                        d++;
+                    }
+                    people.get(u).decNumSlices();
+                }
+                people.get(u).sweepDoorstep();
+            }
+
+        }
+
+        System.out.println();
+        for (Person ph : people) {
+            System.out.println(ph);
+        }
+        System.out.println();
+        for (String gh : types.getKeySet()) {
+            System.out.println(gh + " : " + types.getValue(gh));
         }
     }
 }
